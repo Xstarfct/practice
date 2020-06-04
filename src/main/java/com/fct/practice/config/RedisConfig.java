@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -24,7 +23,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @author xstarfct
  * @version 2020-05-21 11:24 上午
  */
-@Configuration
+//@Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
     

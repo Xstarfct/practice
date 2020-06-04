@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.stereotype.Component;
 
 /**
  * 监听所有db的过期事件__keyevent@*__:expired"
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @version 2020-05-21 11:37 上午
  */
 @Slf4j
-@Component
+//@Component
 public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {
     
     /**

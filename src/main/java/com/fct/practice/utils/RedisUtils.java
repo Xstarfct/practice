@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -16,7 +15,7 @@ import org.springframework.util.CollectionUtils;
  * @author xstarfct
  * @version 2020-05-21 11:45 上午
  */
-@Component
+//@Component
 public class RedisUtils {
     
     @Resource

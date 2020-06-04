@@ -6,6 +6,7 @@ import com.fct.practice.modal.UserDO;
 import com.fct.practice.service.convert.UserConvert;
 import com.fct.practice.utils.Sahara;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 
 /**
@@ -40,5 +41,12 @@ public class LombokUserTest {
         UserDTO dto = UserConvert.INSTANCE.domain2Dto(fct2);
         
         log.info("dto={}, dtoJson={}", dto, JSON.toJSONString(dto));
+    }
+    
+    
+    @Test
+    public void test() {
+        byte[] bytes = Base64.decodeBase64("NDBiMjkyNGQ0LTBiZjQtNGYzMC1hY2YwLTdhNmM1NDRhN2UwMQ==");
+        log.info("result = {}", new String(bytes));
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.fct</groupId>
+    <artifactId>practice</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <packaging>pom</packaging>
+
+  <groupId>com.fct.dubbo</groupId>
+  <artifactId>dubbo-learn</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>dubbo-learn</name>
+
+  <description>Demo project for Spring Boot</description>
+
+  <modules>
+    <module>dubbo-learn-api</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+
+    </dependencies>
+  </dependencyManagement>
+
+</project>

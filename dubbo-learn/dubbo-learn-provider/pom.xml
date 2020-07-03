@@ -21,6 +21,18 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
+    <!-- nacos配置中心  -->
+    <dependency>
+      <groupId>com.alibaba.boot</groupId>
+      <artifactId>nacos-config-spring-boot-starter</artifactId>
+      <version>0.2.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
     <!-- Dubbo Spring Boot Starter -->
     <dependency>
       <groupId>org.apache.dubbo</groupId>
@@ -33,19 +45,32 @@
       <artifactId>dubbo</artifactId>
     </dependency>
 
-    <!-- Zookeeper dependencies -->
+    <!-- Zookeeper 注册中心依赖 -->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.dubbo</groupId>-->
+<!--      <artifactId>dubbo-dependencies-zookeeper</artifactId>-->
+<!--      <version>${dubbo.version}</version>-->
+<!--      <type>pom</type>-->
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.slf4j</groupId>-->
+<!--          <artifactId>slf4j-log4j12</artifactId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+<!--    </dependency>-->
+
+    <!-- Nacos注册中心依赖 start -->
     <dependency>
       <groupId>org.apache.dubbo</groupId>
-      <artifactId>dubbo-dependencies-zookeeper</artifactId>
+      <artifactId>dubbo-registry-nacos</artifactId>
       <version>${dubbo.version}</version>
-      <type>pom</type>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.alibaba.nacos</groupId>
+      <artifactId>nacos-client</artifactId>
+    </dependency>
+    <!-- Nacos注册中心依赖 end -->
+
   </dependencies>
 
   <build>

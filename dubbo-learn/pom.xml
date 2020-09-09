@@ -20,6 +20,7 @@
   <modules>
     <module>dubbo-learn-api</module>
     <module>dubbo-learn-provider</module>
+    <module>dubbo-learn-consumer</module>
   </modules>
 
   <dependencyManagement>

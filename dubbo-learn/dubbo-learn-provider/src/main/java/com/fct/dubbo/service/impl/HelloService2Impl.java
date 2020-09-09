@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
  * @author xstarfct
  * @version 2020-06-04 2:02 下午
  */
-@DubboService(group = "hello1")
-public class HelloServiceImpl implements HelloService {
+@DubboService(group = "hello2")
+public class HelloService2Impl implements HelloService {
     
     /**
      * The default value of ${dubbo.application.name} is ${spring.application.name}
@@ -20,6 +20,6 @@ public class HelloServiceImpl implements HelloService {
     private String serviceName;
     
     public String sayHello(String name) {
-        return String.format("[%s] : Hello1, %s", serviceName, name);
+        return String.format("[%s] : Hello2, %s", serviceName, name);
     }
 }

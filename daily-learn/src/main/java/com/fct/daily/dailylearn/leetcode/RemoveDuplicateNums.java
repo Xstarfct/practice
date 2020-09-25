@@ -1,6 +1,4 @@
-package com.fct.daily.dailylearn.common;
-
-import org.junit.Test;
+package com.fct.daily.dailylearn.leetcode;
 
 /**
  * <pre>
@@ -13,15 +11,15 @@ import org.junit.Test;
  * 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
  * </pre>
  * <p> 解题答案
- *     https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/solution/shan-chu-pai-xu-shu-zu-zhong-de-zhong-fu-xiang-by-/
+ * https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/solution/shan-chu-pai-xu-shu-zu-zhong-de-zhong-fu-xiang-by-/
  * </p>
  *
  * @author xstarfct
  * @version 2020-09-14 10:25
  */
-public class RemoveNumsTest {
+public class RemoveDuplicateNums {
     
-    public int removeDuplicates(int[] nums) {
+    public static int removeDuplicates(int[] nums) {
         int index = 0;
         for (int i = 1; i < nums.length; i++) {
             if (nums[index] != nums[i]) {
@@ -32,8 +30,7 @@ public class RemoveNumsTest {
         return index + 1;
     }
     
-    @Test
-    public void test1() {
+    public static void main(String[] args) {
         int[] nums = new int[]{0, 0, 2, 2, 3, 4, 4, 7, 7, 7, 8, 9, 10, 10};
         int len = removeDuplicates(nums);
         System.out.println(len);

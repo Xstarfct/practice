@@ -48,4 +48,25 @@ public class NumberTest extends NoSpringBaseTest {
       new Thread(() -> {}).run();
     }
   }
+
+  @Test
+  public void find2ArrayMinTest() {
+    int[][] a = new int[][] {{1, 6, -3, 0}, {7, 5, 10, 33}, {2, 12, 9, 4}};
+    System.out.println(find2ArrayMinTest(a));
+  }
+
+  static int find2ArrayMinTest(int[][] x) {
+    int m = 0;
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++) {
+        if (x[i][j] < m) {
+          m = x[i][j];
+        }
+      }
+    }
+    return m;
+  }
+
+
+
 }

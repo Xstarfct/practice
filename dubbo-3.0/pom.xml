@@ -25,6 +25,7 @@
         <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
         <grpc.version>1.19.0</grpc.version>
         <protoc.version>3.7.1</protoc.version>
+        <jmh.version>1.32</jmh.version>
     </properties>
 
     <dependencies>
@@ -70,6 +71,36 @@
             <version>1.12.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- mapstruct(dto convert to do) start-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.3.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.3.0.Final</version>
+        </dependency>
+        <!-- mapstruct end-->
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>${jmh.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>${jmh.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>reflectasm</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>

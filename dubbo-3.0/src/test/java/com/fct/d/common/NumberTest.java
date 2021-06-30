@@ -1,6 +1,7 @@
 package com.fct.d.common;
 
 import com.fct.d.NoSpringBaseTest;
+import com.fct.d.lc.RomanNumber;
 import org.junit.Test;
 
 /**
@@ -67,6 +68,9 @@ public class NumberTest extends NoSpringBaseTest {
     return m;
   }
 
-
+  @Test
+  public void romanNumberTest() {
+    System.out.println(new RomanNumber().romanToInt("CCVI"));
+  }
 
 }

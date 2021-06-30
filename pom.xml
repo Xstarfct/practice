@@ -22,6 +22,7 @@
     <!-- 日常学习 -->
     <module>daily-learn</module>
     <module>dubbo-3.0</module>
+      <module>spring-boot-starter-demo</module>
   </modules>
 
   <properties>

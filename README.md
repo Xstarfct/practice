@@ -6,3 +6,6 @@ https://github.com/doocs/advanced-java
 
 ## 源码学习
 https://github.com/doocs/source-code-hunter
+
+## 算法
+https://github.com/chefyuan/algorithm-base

@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class IndexController {
     
-    @DubboReference(group = "hello1")
+    @DubboReference(group = "hello1", check = false)
     private HelloService helloService1;
-    @DubboReference(group = "hello2")
+    @DubboReference(group = "hello2", check = false)
     private HelloService helloService2;
     
     @Resource

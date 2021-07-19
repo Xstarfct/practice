@@ -28,7 +28,8 @@ public class RmiServerConfig {
         rmiServiceExporter.setServiceName("userService");
         rmiServiceExporter.setService(userService);
         rmiServiceExporter.setServiceInterface(UserService.class);
-        rmiServiceExporter.setRegistryPort(10086);// 默认为1099，注意占用问题
+        // 默认为1099，注意占用问题
+        rmiServiceExporter.setRegistryPort(10086);
         try {
             rmiServiceExporter.afterPropertiesSet();
         } catch (RemoteException e) {

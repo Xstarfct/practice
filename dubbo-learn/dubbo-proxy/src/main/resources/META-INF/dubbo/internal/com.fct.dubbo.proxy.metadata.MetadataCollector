@@ -1,0 +1,1 @@
+zookeeper=com.fct.dubbo.proxy.metadata.impl.ZookeeperMetadataCollector

@@ -1,25 +1,26 @@
 package com.fct.dubbo.proxy.utils;
 
+import com.alibaba.fastjson.JSON;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public enum ResultCode {
+  OK(0, "success"),
 
-    OK(0),
+  TIMEOUT(1, "timeout"),
 
-    TIMEOUT(1),
+  BIZ_ERROR(2, "BIZ_ERROR"),
 
-    BIZERROR(2),
+  NETWORK_ERROR(3, "NETWORK_ERROR"),
 
-    NETWORKERROR(3),
+  SERIALIZATION(4, "SERIALIZATION");
 
-    SERIALIZATION(4);
+  private final int code;
+  private final String message;
 
-
-    private int code;
-
-    ResultCode(int code) {
-        this.code = code;
-    }
-
-    public int getCode() {
-        return code;
-    }
+  public static void main(String[] args) {
+    System.out.println(JSON.toJSONString(ResultCode.TIMEOUT));
+  }
 }

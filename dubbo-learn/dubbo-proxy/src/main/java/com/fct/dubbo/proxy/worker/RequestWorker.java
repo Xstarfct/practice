@@ -2,8 +2,9 @@ package com.fct.dubbo.proxy.worker;
 
 import com.alibaba.fastjson.JSON;
 
-import com.fct.dubbo.proxy.dao.ServiceDefinition;
-import com.fct.dubbo.proxy.dao.ServiceMapping;
+import com.fct.dubbo.proxy.domain.ApiProxyResult;
+import com.fct.dubbo.proxy.domain.BaseResponseCode;
+import com.fct.dubbo.proxy.domain.ServiceDefinition;
 import com.fct.dubbo.proxy.metadata.MetadataCollector;
 import com.fct.dubbo.proxy.service.GenericInvoke;
 import com.fct.dubbo.proxy.utils.Constants;
@@ -21,6 +22,8 @@ import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.metadata.definition.model.FullServiceDefinition;
 import org.apache.dubbo.metadata.definition.model.MethodDefinition;
 import org.apache.dubbo.metadata.report.identifier.MetadataIdentifier;
@@ -31,59 +34,53 @@ import java.util.Set;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
+@Slf4j
 public class RequestWorker implements Runnable {
 
-  private ServiceDefinition serviceDefinition;
-  private ChannelHandlerContext ctx;
-  private HttpRequest msg;
-
-  private MetadataCollector metadataCollector;
-
-  private ServiceMapping serviceMapping;
+  private final ServiceDefinition serviceDefinition;
+  private final ChannelHandlerContext ctx;
+  private final HttpRequest msg;
+  private final MetadataCollector metadataCollector;
 
   public RequestWorker(
       ServiceDefinition serviceDefinition,
       ChannelHandlerContext ctx,
       HttpRequest msg,
-      MetadataCollector metadataCollector,
-      ServiceMapping serviceMapping) {
+      MetadataCollector metadataCollector) {
     this.serviceDefinition = serviceDefinition;
     this.ctx = ctx;
     this.msg = msg;
-    this.serviceMapping = serviceMapping;
     this.metadataCollector = metadataCollector;
   }
 
   @Override
   public void run() {
-    String serviceID = serviceDefinition.getServiceID();
-    String interfaze = Tool.getInterface(serviceID);
-    String group = Tool.getGroup(serviceID);
-    String version = Tool.getVersion(serviceID);
-    if (serviceDefinition.getParamTypes() == null && serviceDefinition.getParamValues() != null) {
-      String[] types =
-          getTypesFromMetadata(
-              serviceDefinition.getApplication(),
-              interfaze,
-              group,
-              version,
-              serviceDefinition.getMethodName(),
-              serviceDefinition.getParamValues().length);
-      serviceDefinition.setParamTypes(types);
-    }
     Object result;
     try {
-      result =
-          GenericInvoke.genericCall(
-              interfaze,
-              group,
-              version,
-              serviceDefinition.getMethodName(),
-              serviceDefinition.getParamTypes(),
-              serviceDefinition.getParamValues());
+      if (serviceDefinition == null) {
+        result = ApiProxyResult.fail(BaseResponseCode.FATAL_ERROR);
+      } else {
+        String serviceID = serviceDefinition.getServiceID();
+        String interfaze = Tool.getInterface(serviceID);
+        String group = Tool.getGroup(serviceID);
+        String version = Tool.getVersion(serviceID);
+        if (serviceDefinition.getParamTypes() == null
+            && serviceDefinition.getParamValues() != null) {
+          String[] types =
+              getTypesFromMetadata(
+                  serviceDefinition.getApplication(),
+                  interfaze,
+                  group,
+                  version,
+                  serviceDefinition.getMethodName(),
+                  serviceDefinition.getParamValues().length);
+          serviceDefinition.setParamTypes(types);
+        }
+        result = GenericInvoke.genericCall(interfaze, group, version, serviceDefinition);
+      }
     } catch (Exception e) {
-      e.printStackTrace();
-      result = e;
+      // e.printStackTrace();
+      result = ApiProxyResult.fail(BaseResponseCode.SYSTEM_ERROR);
     }
     if (!writeResponse(ctx, result)) {
       ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
@@ -96,7 +93,10 @@ public class RequestWorker implements Runnable {
     boolean keepAlive = HttpUtil.isKeepAlive(this.msg);
     FullHttpResponse response =
         new DefaultFullHttpResponse(
-            HTTP_1_1, OK, Unpooled.copiedBuffer(JSON.toJSONString(result), CharsetUtil.UTF_8));
+            HTTP_1_1,
+            OK,
+            Unpooled.copiedBuffer(
+                JSON.toJSONString(ApiProxyResult.markResult(result)), CharsetUtil.UTF_8));
 
     response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
 
@@ -138,6 +138,10 @@ public class RequestWorker implements Runnable {
     MetadataIdentifier identifier =
         new MetadataIdentifier(interfaze, version, group, Constants.PROVIDER_SIDE, application);
     String metadata = metadataCollector.getProviderMetaData(identifier);
+    // 一些老的应用没有元数据无法获取类型
+    if (StringUtils.isBlank(metadata)) {
+      return null;
+    }
     FullServiceDefinition serviceDefinition =
         JSON.parseObject(metadata, FullServiceDefinition.class);
     List<MethodDefinition> methods = serviceDefinition.getMethods();

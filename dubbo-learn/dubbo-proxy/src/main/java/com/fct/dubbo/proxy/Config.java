@@ -1,47 +1,47 @@
 package com.fct.dubbo.proxy;
 
-import com.fct.dubbo.proxy.dao.ServiceMapping;
+import com.fct.dubbo.proxy.domain.ServiceMapping;
 import com.fct.dubbo.proxy.metadata.MetadataCollector;
+import com.fct.dubbo.proxy.utils.Constants;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.registry.Registry;
 import org.apache.dubbo.registry.RegistryFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.List;
 
-@ConfigurationProperties(prefix = "mapping")
+@ConfigurationProperties(prefix = "proxy")
 @Configuration
+@Getter
+@Setter
 public class Config {
 
-  @Value("${proxy.registry.address}")
   private String registryAddress;
 
-  @Value("${proxy.registry.group}")
   private String group;
 
-  @Value("${proxy.metadata-report.address:}")
   private String metadataAddress;
 
+  private Integer threadCount;
+
+  /** 网关环境 dev、test、pre、pro */
+  private String env;
+
   private List<Mapping> services;
-
-  public List<Mapping> getServices() {
-    return services;
-  }
-
-  public void setServices(List<Mapping> services) {
-    this.services = services;
-  }
 
   @Bean
   public ServiceMapping getServiceMapping() {
     ServiceMapping serviceMapping = new ServiceMapping();
     serviceMapping.setMappings(services);
+    serviceMapping.setEnv(StringUtils.isBlank(env) ? Constants.DEFAULT_ENV : env);
+    serviceMapping.setThreadCount(threadCount);
     return serviceMapping;
   }
 
@@ -60,50 +60,18 @@ public class Config {
   MetadataCollector getMetadataCollector() {
     MetadataCollector metaDataCollector = null;
     if (StringUtils.isNotEmpty(metadataAddress)) {
-      URL metadataUrl = URL.valueOf(metadataAddress);
       metaDataCollector =
           ExtensionLoader.getExtensionLoader(MetadataCollector.class)
-              .getExtension(metadataUrl.getProtocol());
+              .getExtension(URL.valueOf(metadataAddress).getProtocol());
     }
     return metaDataCollector;
   }
 
+  @Data
   public static class Mapping {
     private String name;
     private String interfaze;
     private String group;
     private String version;
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getInterfaze() {
-      return interfaze;
-    }
-
-    public void setInterfaze(String interfaze) {
-      this.interfaze = interfaze;
-    }
-
-    public String getGroup() {
-      return group;
-    }
-
-    public void setGroup(String group) {
-      this.group = group;
-    }
-
-    public String getVersion() {
-      return version;
-    }
-
-    public void setVersion(String version) {
-      this.version = version;
-    }
   }
 }

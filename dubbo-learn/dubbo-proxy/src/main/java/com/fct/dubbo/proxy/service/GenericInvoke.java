@@ -1,18 +1,28 @@
 package com.fct.dubbo.proxy.service;
 
+import com.alibaba.fastjson.JSON;
+import com.fct.dubbo.proxy.domain.ApiProxyResult;
+import com.fct.dubbo.proxy.domain.BaseResponseCode;
+import com.fct.dubbo.proxy.domain.ServiceDefinition;
+import com.fct.dubbo.proxy.router.EnvRouter;
 import com.fct.dubbo.proxy.utils.ResultCode;
+import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.ApplicationConfig;
+import org.apache.dubbo.config.ConsumerConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
+import org.apache.dubbo.config.utils.ReferenceConfigCache;
 import org.apache.dubbo.registry.Registry;
+import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.service.GenericService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public class GenericInvoke {
 
   private static ApplicationConfig applicationConfig;
@@ -28,89 +38,74 @@ public class GenericInvoke {
     RegistryConfig registryConfig = new RegistryConfig();
     registryConfig.setAddress(
         registry.getUrl().getProtocol() + "://" + registry.getUrl().getAddress());
-    registryConfig.setGroup(
-        registry
-            .getUrl()
-            .getParameter(org.apache.dubbo.common.constants.CommonConstants.GROUP_KEY));
+    registryConfig.setGroup(registry.getUrl().getParameter(CommonConstants.GROUP_KEY));
     applicationConfig = new ApplicationConfig();
     applicationConfig.setName("dubbo-proxy");
     applicationConfig.setRegistry(registryConfig);
   }
 
-  private static final ConcurrentHashMap<String, ReferenceConfig<GenericService>> cachedConfig =
-      new ConcurrentHashMap<>();
-  private static final Logger logger = LoggerFactory.getLogger(GenericInvoke.class);
-
   public static Object genericCall(
-      String interfaceName,
-      String group,
-      String version,
-      String methodName,
-      String[] paramTypes,
-      Object[] paramObjs) {
+      String interfaceName, String group, String version, ServiceDefinition sd) {
     if (init.compareAndSet(false, true)) {
       init();
     }
-    ReferenceConfig<GenericService> reference;
-    reference = addNewReference(interfaceName, group, version);
+    ReferenceConfig<GenericService> reference = initReference(interfaceName, group, version);
+    final ReferenceConfigCache cache = ReferenceConfigCache.getCache();
 
+    Object result = null;
+    long t1 = System.currentTimeMillis();
     try {
-      GenericService svc = reference.get();
-      logger.info(
-          "dubbo generic invoke, service is {}, method is {} , paramTypes is {} , paramObjs is {} , svc is {}.",
-          interfaceName,
-          methodName,
-          paramTypes,
-          paramObjs,
-          svc);
-      return svc.$invoke(methodName, paramTypes, paramObjs);
+      final GenericService svc = cache.get(reference);
+      // 支持dubbo attachments
+      if (sd.getAttachments() != null
+          && !sd.getAttachments().isEmpty()) {
+        RpcContext.getContext().setAttachments(sd.getAttachments());
+      }
+      result = svc.$invoke(sd.getMethodName(), sd.getParamTypes(), sd.getParamValues());
+      return result;
     } catch (Exception e) {
-      logger.error("Generic invoke failed", e);
+      log.error("Generic invoke failed", e);
       if (e instanceof RpcException) {
         RpcException e1 = (RpcException) e;
         if (e1.isTimeout()) {
-          return ResultCode.TIMEOUT;
+          return ApiProxyResult.formatErrMsg(BaseResponseCode.PRC_ERROR, ResultCode.TIMEOUT.getMessage());
         }
         if (e1.isBiz()) {
-          return ResultCode.BIZERROR;
+          return ApiProxyResult.formatErrMsg(BaseResponseCode.PRC_ERROR, ResultCode.BIZ_ERROR.getMessage());
         }
         if (e1.isNetwork()) {
-          return ResultCode.NETWORKERROR;
+          return ApiProxyResult.formatErrMsg(BaseResponseCode.PRC_ERROR, ResultCode.NETWORK_ERROR.getMessage());
         }
         if (e1.isSerialization()) {
-          return ResultCode.SERIALIZATION;
+          return ApiProxyResult.formatErrMsg(BaseResponseCode.PRC_ERROR, ResultCode.SERIALIZATION.getMessage());
         }
       }
-      throw e;
+      return ApiProxyResult.formatErrMsg(BaseResponseCode.PRC_ERROR, e.getMessage());
+    } finally {
+      log.info(
+          "dubbo generic invoke,cost={} service={}, sd={} , result={}.",
+          System.currentTimeMillis() - t1,
+          interfaceName,
+          JSON.toJSONString(sd),
+          result);
     }
-  }
-
-  private static ReferenceConfig<GenericService> addNewReference(
-      String interfaceName, String group, String version) {
-    ReferenceConfig<GenericService> reference;
-    String cachedKey = interfaceName + group + version;
-    reference = cachedConfig.get(cachedKey);
-    if (reference == null) {
-      ReferenceConfig<GenericService> newReference = initReference(interfaceName, group, version);
-      ReferenceConfig<GenericService> oldReference =
-          cachedConfig.putIfAbsent(cachedKey, newReference);
-      if (oldReference != null) {
-        reference = oldReference;
-      } else {
-        reference = newReference;
-      }
-    }
-    return reference;
   }
 
   private static ReferenceConfig<GenericService> initReference(
       String interfaceName, String group, String version) {
     ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
-    reference.setGeneric(true);
+    reference.setGeneric("true");
     reference.setApplication(applicationConfig);
     reference.setGroup(group);
     reference.setVersion(version);
     reference.setInterface(interfaceName);
+    // envRouter setting
+    String routerGroup = RpcContext.getContext().getAttachment(EnvRouter.DUBBO_ROUTER_GROUP);
+    if (!StringUtils.isBlank(routerGroup)) {
+      ConsumerConfig consumerConfig = new ConsumerConfig();
+      consumerConfig.setParameters(ImmutableMap.of(routerGroup, routerGroup));
+      reference.setConsumer(consumerConfig);
+    }
     return reference;
   }
 }

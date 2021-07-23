@@ -1,17 +1,12 @@
 netty:
   port: 8000
 
-business:
-  thread:
-    count: 100
 proxy:
-  registry:
-    address: zookeeper://10.0.0.28:2181
-    group: dubbo
-  metadata-report:
-    address: zookeeper://10.0.0.28:2181
-
-mapping:
+  env: dev
+  group: dubbo
+  registry-address: zookeeper://10.0.0.28:2181
+  metadata-address: zookeeper://10.0.0.28:2181
+  thread-count: 100
   services:
     - name: demoservice
       interfaze: org.apache.dubbo.api.DemoService

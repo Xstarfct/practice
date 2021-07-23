@@ -1,6 +1,6 @@
 package com.fct.dubbo.proxy.server;
 
-import com.fct.dubbo.proxy.dao.ServiceMapping;
+import com.fct.dubbo.proxy.domain.ServiceMapping;
 import com.fct.dubbo.proxy.metadata.MetadataCollector;
 import com.fct.dubbo.proxy.service.GenericInvoke;
 import com.fct.dubbo.proxy.utils.InetAddressUtil;
@@ -41,9 +41,6 @@ public class NettyServer {
   @Value("${netty.port}")
   private int port;
 
-  @Value("${business.thread.count}")
-  private int businessThreadCount;
-
   private final MetadataCollector metadataCollector;
 
   private final ServiceMapping serviceMapping;
@@ -82,13 +79,12 @@ public class NettyServer {
     bossGroup =
         new NioEventLoopGroup(
             Runtime.getRuntime().availableProcessors(),
-            new NamingThreadFactory("" + "Dubbo-Proxy-Boss"));
+            new NamingThreadFactory("Dubbo-Proxy-Boss"));
     workerGroup =
         new NioEventLoopGroup(
             Runtime.getRuntime().availableProcessors() * 2,
             new NamingThreadFactory("Dubbo-Proxy-Work"));
-    HttpProcessHandler processHandler =
-        new HttpProcessHandler(businessThreadCount, serviceMapping, metadataCollector);
+    HttpProcessHandler processHandler = new HttpProcessHandler(serviceMapping, metadataCollector);
     bootstrap
         .group(bossGroup, workerGroup)
         .channel(NioServerSocketChannel.class)

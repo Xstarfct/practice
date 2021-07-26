@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,9 +60,9 @@ public class NettyServer {
     serverStart.execute(
         () -> {
           init();
-          String inetHost = InetAddressUtil.getLocalIP();
+          List<String> inetHost = InetAddressUtil.getLocalIPList();
           try {
-            ChannelFuture f = bootstrap.bind(inetHost, port).sync();
+            ChannelFuture f = bootstrap.bind(port).sync();
             logger.info("Dubbo proxy started, host is {} , port is {}.", inetHost, port);
             f.channel().closeFuture().sync();
             logger.info("Dubbo proxy closed, host is {} , port is {}.", inetHost, port);

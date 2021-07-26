@@ -1,6 +1,6 @@
 package com.fct.dubbo.proxy.domain;
 
-import com.fct.dubbo.proxy.Config;
+import com.fct.dubbo.proxy.ProxyConfig;
 import lombok.Data;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ServiceMapping {
 
-  List<Config.Mapping> mappings;
+  List<ProxyConfig.Mapping> mappings;
 
   String env;
 

@@ -2,7 +2,7 @@ package com.fct.dubbo.proxy.utils;
 
 import org.apache.dubbo.metadata.definition.model.MethodDefinition;
 
-public class Tool {
+public class DubboServiceTool {
   public static String getInterface(String service) {
     if (service != null && service.length() > 0) {
       int i = service.indexOf('/');

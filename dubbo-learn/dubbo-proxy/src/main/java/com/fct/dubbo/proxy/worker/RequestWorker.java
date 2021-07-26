@@ -8,7 +8,7 @@ import com.fct.dubbo.proxy.domain.ServiceDefinition;
 import com.fct.dubbo.proxy.metadata.MetadataCollector;
 import com.fct.dubbo.proxy.service.GenericInvoke;
 import com.fct.dubbo.proxy.utils.Constants;
-import com.fct.dubbo.proxy.utils.Tool;
+import com.fct.dubbo.proxy.utils.DubboServiceTool;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -61,9 +61,9 @@ public class RequestWorker implements Runnable {
         result = ApiProxyResult.fail(BaseResponseCode.FATAL_ERROR);
       } else {
         String serviceID = serviceDefinition.getServiceID();
-        String interfaze = Tool.getInterface(serviceID);
-        String group = Tool.getGroup(serviceID);
-        String version = Tool.getVersion(serviceID);
+        String interfaze = DubboServiceTool.getInterface(serviceID);
+        String group = DubboServiceTool.getGroup(serviceID);
+        String version = DubboServiceTool.getVersion(serviceID);
         if (serviceDefinition.getParamTypes() == null
             && serviceDefinition.getParamValues() != null) {
           String[] types =
@@ -147,7 +147,7 @@ public class RequestWorker implements Runnable {
     List<MethodDefinition> methods = serviceDefinition.getMethods();
     if (methods != null) {
       for (MethodDefinition m : methods) {
-        if (Tool.sameMethod(m, methodName, paramLen)) {
+        if (DubboServiceTool.sameMethod(m, methodName, paramLen)) {
           return m.getParameterTypes();
         }
       }

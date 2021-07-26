@@ -21,7 +21,7 @@ import java.util.List;
 @Configuration
 @Getter
 @Setter
-public class Config {
+public class ProxyConfig {
 
   private String registryAddress;
 

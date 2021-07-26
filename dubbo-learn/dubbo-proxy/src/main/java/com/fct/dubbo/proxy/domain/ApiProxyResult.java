@@ -59,7 +59,7 @@ public class ApiProxyResult implements Serializable {
         false);
   }
 
-  @SuppressWarnings("all")
+  @SuppressWarnings("rawtypes")
   public static ApiProxyResult markResult(Object obj) {
     if (obj == null) {
       return ApiProxyResult.success();
@@ -80,7 +80,7 @@ public class ApiProxyResult implements Serializable {
         Optional.ofNullable(resultMap.remove("message"))
             .orElse(BaseResponseCode.SUCCESS.getMessage());
     resultMap.remove("class");
-    // 生成签名
+    // TODO 生成签名
     //    String signString = JSONObject.toJSONString(resultMap);
     //    String sign = MD5.getStrUpper(signString);
 

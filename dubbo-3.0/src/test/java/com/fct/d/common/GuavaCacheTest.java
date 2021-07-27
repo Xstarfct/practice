@@ -74,4 +74,9 @@ public class GuavaCacheTest extends NoSpringBaseTest {
 
     TimeUnit.MINUTES.sleep(60);
   }
+
+  @Test
+  public void testFlux() throws Exception {
+
+  }
 }

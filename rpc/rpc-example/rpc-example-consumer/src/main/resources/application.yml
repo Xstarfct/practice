@@ -1,0 +1,9 @@
+server:
+  port: 9090
+
+# rpc.client
+rpc:
+  client:
+    balance: fullRoundBalance
+    discovery-address: 10.0.0.28:2181
+    timeout: 3000

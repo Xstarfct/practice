@@ -14,6 +14,12 @@
   <artifactId>rpc-example</artifactId>
   <packaging>pom</packaging>
 
+  <modules>
+    <module>rpc-example-api</module>
+    <module>rpc-example-provider</module>
+    <module>rpc-example-consumer</module>
+  </modules>
+
   <dependencies>
     <dependency>
       <groupId>com.fct.rpc</groupId>

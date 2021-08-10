@@ -17,10 +17,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.fct</groupId>-->
-<!--      <artifactId>provider-api</artifactId>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>com.fct.rpc</groupId>
       <artifactId>rpc-server-spring-starter</artifactId>
@@ -33,14 +29,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-            </exclude>
-          </excludes>
-        </configuration>
       </plugin>
     </plugins>
   </build>

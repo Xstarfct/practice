@@ -20,43 +20,40 @@ import org.springframework.context.annotation.Primary;
 @EnableConfigurationProperties(RpcClientProperties.class)
 public class RpcClientAutoConfiguration {
 
-//    @Resource
-//    private RpcClientProperties rpcClientProperties;
-
     @Bean
     @ConditionalOnMissingBean
     public ClientStubProxyFactory clientStubProxyFactory() {
         return new ClientStubProxyFactory();
     }
 
-    @Primary
-    @Bean(name = "loadBalance")
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "rpc.client", name = "balance", havingValue = "randomBalance", matchIfMissing = true)
-    public LoadBalance randomBalance() {
-        return new RandomBalance();
-    }
+//    @Primary
+//    @Bean(name = "loadBalance")
+//    @ConditionalOnMissingBean
+//    @ConditionalOnProperty(prefix = "rpc.client", name = "balance", havingValue = "randomBalance", matchIfMissing = true)
+//    public LoadBalance randomBalance() {
+//        return new RandomBalance();
+//    }
+//
+//    @Bean(name = "loadBalance")
+//    @ConditionalOnMissingBean
+//    @ConditionalOnProperty(prefix = "rpc.client", name = "balance", havingValue = "fullRoundBalance")
+//    public LoadBalance loadBalance() {
+//        return new FullRoundBalance();
+//    }
 
-    @Bean(name = "loadBalance")
+    @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "rpc.client", name = "balance", havingValue = "fullRoundBalance")
-    public LoadBalance loadBalance() {
-        return new FullRoundBalance();
+//    @ConditionalOnBean({LoadBalance.class})
+    public DiscoveryService discoveryService(@Autowired RpcClientProperties rpcClientProperties/*,
+                                             LoadBalance loadBalance*/) {
+        System.out.println("\n" + rpcClientProperties + "\n");
+        return new ZookeeperDiscoveryService(rpcClientProperties.getDiscoveryAddress(), new FullRoundBalance());
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean({/*RpcClientProperties.class, */LoadBalance.class})
-    public DiscoveryService discoveryService(RpcClientProperties rpcClientProperties,
-                                             @Autowired LoadBalance loadBalance) {
-        return new ZookeeperDiscoveryService(rpcClientProperties.getDiscoveryAddress(), loadBalance);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public RpcClientProcessor rpcClientProcessor(@Autowired ClientStubProxyFactory clientStubProxyFactory,
-                                                 @Autowired DiscoveryService discoveryService,
-                                                 @Autowired RpcClientProperties rpcClientProperties) {
+    static RpcClientProcessor rpcClientProcessor(ClientStubProxyFactory clientStubProxyFactory,
+        DiscoveryService discoveryService, @Autowired RpcClientProperties rpcClientProperties) {
         return new RpcClientProcessor(clientStubProxyFactory, discoveryService, rpcClientProperties);
     }
 

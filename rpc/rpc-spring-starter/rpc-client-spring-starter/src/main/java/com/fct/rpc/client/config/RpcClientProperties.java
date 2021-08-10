@@ -1,14 +1,15 @@
 package com.fct.rpc.client.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Setter
-@Getter
-@ConfigurationProperties(prefix = "rpc.client")
-public class RpcClientProperties {
+import java.io.Serializable;
 
+@Data
+@ConfigurationProperties(prefix = "rpc.client", ignoreInvalidFields = true)
+public class RpcClientProperties implements Serializable {
+
+    private static final long serialVersionUID = 7734132614516666206L;
     /**
      *  负载均衡
      */

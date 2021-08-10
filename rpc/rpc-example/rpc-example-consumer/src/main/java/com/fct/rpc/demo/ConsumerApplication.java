@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("com.fct.rpc")
+@ComponentScan("com.fct.rpc.*")
 public class ConsumerApplication {
 
     public static void main(String[] args) {

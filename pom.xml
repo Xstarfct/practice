@@ -25,13 +25,6 @@
     <module>spring-boot-starter-demo</module>
     <module>learn-spring-cloud</module>
     <module>rpc</module>
-    <module>rpc/rpc-spring</module>
-    <module>rpc/rpc-spring-starter/rpc-server-spring-starter</module>
-    <module>rpc/rpc-spring-starter/rpc-client-spring-starter</module>
-    <module>rpc/rpc-example</module>
-    <module>rpc/rpc-example-provider</module>
-    <module>rpc/rpc-example-api</module>
-    <module>rpc/rpc-example-consumer</module>
   </modules>
 
   <properties>

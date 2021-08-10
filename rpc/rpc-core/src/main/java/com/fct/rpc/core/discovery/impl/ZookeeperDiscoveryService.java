@@ -27,11 +27,11 @@ public class ZookeeperDiscoveryService implements DiscoveryService {
 
     public static final int BASE_SLEEP_TIME_MS = 1000;
     public static final int MAX_RETRIES = 3;
-    public static final String ZK_BASE_PATH = "/demo_rpc";
+    public static final String ZK_BASE_PATH = "/rpc_fct";
 
     private ServiceDiscovery<ServiceInfo> serviceDiscovery;
 
-    private LoadBalance loadBalance;
+    private final LoadBalance loadBalance;
 
     public ZookeeperDiscoveryService(String registryAddress, LoadBalance loadBalance) {
         this.loadBalance = loadBalance;

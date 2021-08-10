@@ -22,4 +22,22 @@
     <module>rpc-client-spring-starter</module>
   </modules>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.fct</groupId>
+      <artifactId>rpc-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
 </project>

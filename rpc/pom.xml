@@ -50,6 +50,11 @@
                 <artifactId>curator-x-discovery</artifactId>
                 <version>${curator-framework.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fct</groupId>
+                <artifactId>rpc-core</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

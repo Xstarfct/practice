@@ -20,6 +20,7 @@ public class NumberTest extends NoSpringBaseTest {
     System.out.println(isPalindrome(81));
     System.out.println(isPalindrome(181));
     System.out.println(isPalindrome(188888881));
+    System.out.println(0x61c88647);
   }
 
   public boolean isPalindrome(int x) {
@@ -73,4 +74,7 @@ public class NumberTest extends NoSpringBaseTest {
     System.out.println(new RomanNumber().romanToInt("CCVI"));
   }
 
+  @Test
+  public void test1() {
+  }
 }

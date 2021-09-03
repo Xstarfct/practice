@@ -48,8 +48,10 @@ public class MergeListNodeTest extends NoSpringBaseTest {
   @Test
   public void mergeTest2() {
     ListNode l1 = MySingleLinkedList.initListNode(new int[]{1, 4, 8, 10}).head;
+    System.out.println("l1 = " + l1);
     ListNode l2 = MySingleLinkedList.initListNode(new int[]{2, 3, 4, 5, 6, 7, 8, 9, 11, 13}).head;
-    printJson(mergeTwoLists2(l1, l2));
+    System.out.println("l2 = " + l2);
+    System.out.println("mergeTwoLists2:[l1 + l2] = " + mergeTwoLists2(l1, l2));
   }
 
   //迭代
@@ -73,8 +75,10 @@ public class MergeListNodeTest extends NoSpringBaseTest {
   @Test
   public void addTwoNumbersTest() {
     ListNode l1 = MySingleLinkedList.initListNode(new int[] {1, 4, 8, 9}).head;
+    System.out.println("l1 = " + l1);
     ListNode l2 = MySingleLinkedList.initListNode(new int[] {2, 3, 4, 5}).head;
-    printJson(addTwoNumbers(l1, l2));
+    System.out.println("l2 = " + l2);
+    System.out.println("addTwoNumbers:[l1 + l2] = " + addTwoNumbers(l1, l2));
   }
 
   public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -91,5 +95,39 @@ public class MergeListNodeTest extends NoSpringBaseTest {
     }
     return dummy.next;
   }
+
+  /**
+   * <pre>
+   *   https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+   * </pre>
+   * 删除倒数第n个节点
+   */
+  public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(), p1 = dummy, p2 = dummy;
+    dummy.next = head;
+
+    // 双指针定位出左右两个之间的距离为n
+    for (int i = 0; i < n; i++) {
+      if (p2 == null) {
+        return dummy.next;
+      }
+      p2 = p2.next;
+    }
+    while (p2.next != null) {
+      p1 = p1.next;
+      p2 = p2.next;
+    }
+    if (p1 != null && p1.next != null) {
+      p1.next = p1.next.next;
+    }
+    return dummy.next;
+  }
+
+  @Test
+  public void removeNthFromEndTest() {
+    ListNode l1 = MySingleLinkedList.initListNode(new int[] {1, 4, 8, 9}).head;
+    System.out.println(removeNthFromEnd(l1, 2));
+  }
+
 
 }

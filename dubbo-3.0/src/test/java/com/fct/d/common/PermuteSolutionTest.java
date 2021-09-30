@@ -15,6 +15,7 @@ public class PermuteSolutionTest extends NoSpringBaseTest {
   @Test
   public void testPermute1() {
     printJson(new PermuteSolution().permute(new int[]{1,2,3}));
+    System.out.println(Math.addExact(1,3));
 
   }
 }

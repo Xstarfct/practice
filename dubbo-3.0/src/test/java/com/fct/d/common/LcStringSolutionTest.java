@@ -1,6 +1,7 @@
 package com.fct.d.common;
 
 import com.fct.d.lc.LcStringSolution;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -21,11 +22,16 @@ public class LcStringSolutionTest {
 
   @Test
   public void myAotiTest() {
-    System.out.println(lcStringSolution.myAtoi("123"));
-    System.out.println(lcStringSolution.myAtoi("-123a"));
-    System.out.println(lcStringSolution.myAtoi("-12a3a"));
-    System.out.println(lcStringSolution.myAtoi("-12a3a"));
-    System.out.println(lcStringSolution.myAtoi("-a12a3a"));
-    System.out.println(lcStringSolution.myAtoi("-a12"));
+    Assert.assertEquals(123, lcStringSolution.myAtoi("123"));
+    Assert.assertEquals(-123, lcStringSolution.myAtoi("-123a"));
+    Assert.assertEquals(-12, lcStringSolution.myAtoi("-12a3a"));
+    Assert.assertEquals(-12, lcStringSolution.myAtoi("-12a3a"));
+    Assert.assertEquals(0, lcStringSolution.myAtoi("-a12a3a"));
+    Assert.assertEquals(0, lcStringSolution.myAtoi("-a12"));
+  }
+
+  @Test
+  public void countStrTest() {
+    Assert.assertEquals(3, lcStringSolution.countSegments("abc, a ,b"));
   }
 }

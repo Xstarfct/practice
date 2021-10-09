@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Lc中有关字符串相关的题目
  *
- * @author haoyu
+ * @author fct
  * @version 1.0
  * @date 2021/09/26 14:17
  */
